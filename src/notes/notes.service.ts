@@ -28,7 +28,8 @@ export class NotesService {
       key: `create#${noteEntity.id}`,
       value: noteEntity,
     });
-    return firstValueFrom(response$);
+    await firstValueFrom(response$);
+    return noteEntity;
   }
 
   findAll(patientId?: string, doctorId?: string) {
