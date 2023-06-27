@@ -15,5 +15,7 @@ export class NoteEntity {
 
   updatedAt?: string;
 
+  updatedBy?: string;
+
   isExist: boolean;
 }
