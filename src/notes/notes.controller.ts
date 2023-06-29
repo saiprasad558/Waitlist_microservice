@@ -35,6 +35,11 @@ export class NotesController {
     return this.notesService.findAll(patientId, doctorId);
   }
 
+  @Get('/types')
+  getNoteTypes() {
+    return this.notesService.getNoteTypes();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.notesService.findOne(id);

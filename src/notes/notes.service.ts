@@ -2,9 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { ClientKafka, ClientNats } from '@nestjs/microservices';
-import { NoteEntity } from './entities/note.entity';
+import { NoteEntity, noteTypes } from './entities/note.entity';
 import { v4 } from 'uuid';
 import { firstValueFrom } from 'rxjs';
+import { NoteListEntity } from './entities/note-list.entity';
 
 @Injectable()
 export class NotesService {
@@ -70,5 +71,12 @@ export class NotesService {
     );
     await firstValueFrom(response$);
     return 'Note has been deleted successfully';
+  }
+
+  getNoteTypes(): NoteListEntity[] {
+    return Object.entries(noteTypes).map(([value, description]) => ({
+      description,
+      value,
+    }));
   }
 }
