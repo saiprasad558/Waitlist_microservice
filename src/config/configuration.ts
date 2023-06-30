@@ -8,5 +8,5 @@ export default () => ({
     clientId: 'my-app',
     brokers: [process.env.KAFKA || 'localhost:9092'],
   },
-  authUrl: 'https://auth-service-ao3vgcrk4q-uc.a.run.app',
+  authUrl: process.env.AUTH_URL || 'http://localhost:8081',
 });
