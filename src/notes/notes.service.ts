@@ -4,7 +4,7 @@ import { UpdateNoteDto } from './dto/update-note.dto';
 import { ClientKafka, ClientNats } from '@nestjs/microservices';
 import { NoteEntity, noteTypes } from './entities/note.entity';
 import { v4 } from 'uuid';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { NoteListEntity } from './entities/note-list.entity';
 
 @Injectable()
@@ -34,10 +34,19 @@ export class NotesService {
   }
 
   findAll(patientId?: string, doctorId?: string) {
-    return this.clientNats.send<NoteEntity[]>('findAllNotes', {
-      patientId,
-      doctorId,
-    });
+    return this.clientNats
+      .send<NoteEntity[]>('findAllNotes', {
+        patientId,
+        doctorId,
+      })
+      .pipe(
+        map((notes) =>
+          [...notes].sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+          ),
+        ),
+      );
   }
 
   findOne(id: string) {
