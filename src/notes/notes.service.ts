@@ -63,7 +63,7 @@ export class NotesService {
     const response$ = this.clientKafka.emit<Partial<NoteEntity>>(
       this.topicName,
       {
-        key: `remove#${id}`,
+        key: `update#${id}`,
         value: {
           isExist: false,
         },
