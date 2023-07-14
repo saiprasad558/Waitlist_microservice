@@ -13,7 +13,7 @@ import { HttpModule } from '@nestjs/axios';
       load: [configuration],
     }),
     HttpModule,
-    WaitlistModule
+    WaitlistModule,
   ],
   controllers: [],
   providers: [

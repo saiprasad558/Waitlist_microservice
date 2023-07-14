@@ -1,5 +1,3 @@
-
-
 export class WaitListEntity {
   id: string;
   patientId: string;
