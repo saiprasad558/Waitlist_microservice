@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { NotesService } from './notes.service';
-import { NotesController } from './notes.controller';
+import { WaitlistController } from './waitlist.controller';
+import { WaitlistService } from './waitlist.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -8,7 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   imports: [
     ClientsModule.registerAsync([
       {
-        name: 'KAFKA_NOTES_SERVICE',
+        name: 'KAFKA_WAITLIST_SERVICE',
         imports: [ConfigModule],
         useFactory: (configService: ConfigService) => {
           return {
@@ -28,7 +28,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         inject: [ConfigService],
       },
       {
-        name: 'NATS_NOTES_SERVICE',
+        name: 'NATS_WAITLIST_SERVICE',
         imports: [ConfigModule],
         useFactory: (configService: ConfigService) => {
           return {
@@ -43,7 +43,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
     ]),
   ],
-  controllers: [NotesController],
-  providers: [NotesService],
+  controllers: [WaitlistController],
+  providers: [WaitlistService],
 })
-export class NotesModule {}
+export class WaitlistModule {}

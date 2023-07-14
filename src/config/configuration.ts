@@ -2,7 +2,7 @@ export default () => ({
   port: parseInt(process.env.PORT, 10) || 8080,
   nats: {
     server: process.env.NATS || 'nats://localhost:4222',
-    queue: 'notes-data-service',
+    queue: 'waitlist-data-service',
   },
   kafka: {
     clientId: 'my-app',

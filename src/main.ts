@@ -13,13 +13,13 @@ async function bootstrap() {
     transport: Transport.NATS,
     options: {
       servers: [configService.get<string>('nats.server')],
-      queue: 'notes-rest-service',
+      queue: 'waitlist-rest-service',
     },
   });
 
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
-    .setTitle('Notes Microservice')
+    .setTitle('waitlist Microservice')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

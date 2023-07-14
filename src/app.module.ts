@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { NotesModule } from './notes/notes.module';
+import { WaitlistModule } from './waitlist/waitlist.module';
 import configuration from './config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
@@ -13,7 +13,7 @@ import { HttpModule } from '@nestjs/axios';
       load: [configuration],
     }),
     HttpModule,
-    NotesModule,
+    WaitlistModule
   ],
   controllers: [],
   providers: [
