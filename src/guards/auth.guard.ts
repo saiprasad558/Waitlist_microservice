@@ -1,26 +1,37 @@
+import { HttpService } from '@nestjs/axios';
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
 import axios from 'axios';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private httpService: HttpService,
-    private configService: ConfigService,
+    private readonly reflector: Reflector,
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
 
-    if (!token) {
+    const isPublic = this.reflector.get<boolean>(
+      'isPublic',
+      context.getHandler(),
+    );
+
+    const token = request.headers.authorization?.split('Bearer ').pop();
+
+    if (isPublic && !token) {
+      return true;
+    }
+
+    if (!token && !isPublic) {
       throw new UnauthorizedException();
     }
 
@@ -32,7 +43,7 @@ export class AuthGuard implements CanActivate {
         )}/validateToken?access_token=${token}`,
       });
       const { uId, role, auth0Id: authId } = response.data;
-      if (!authId) {
+      if (!authId && !isPublic) {
         throw new UnauthorizedException(new Error('No auth0Id found'));
       }
       request.user = { uId, role, authId };
@@ -45,10 +56,5 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException(error.message);
     }
     return true;
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
   }
 }
