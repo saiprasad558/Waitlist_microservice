@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WaitlistModule } from './waitlist/waitlist.module';
 import configuration from './config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/auth.guard';
-import { RoleGuard } from './guards/role.guard';
 import { HttpModule } from '@nestjs/axios';
+import { AppController } from './app.controller';
+import { AuthModule } from './guards/auth.module';
+import { RequestLoggerMiddleware } from '@sriram-nyshadham/shared';
 
 @Module({
   imports: [
@@ -14,17 +16,19 @@ import { HttpModule } from '@nestjs/axios';
     }),
     HttpModule,
     WaitlistModule,
+    AuthModule
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
-    {
-      provide: APP_GUARD,
-      useClass: RoleGuard,
-    },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}
+

@@ -6,7 +6,7 @@ export default () => ({
   },
   kafka: {
     clientId: 'my-app',
-    brokers: [process.env.KAFKA || 'localhost:9092'],
+    brokers: process.env.KAFKA.split(',') || ['localhost:9092'],
   },
   authUrl: process.env.AUTH_URL || 'http://localhost:8081',
 });
